@@ -1,7 +1,15 @@
-import { sum } from '../index';
+import request from 'supertest';
+import { app, server } from '../index';
 
-describe('Example Test', () => {
-  test('should add numbers correctly', () => {
-    expect(sum(1, 2)).toBe(3);
+describe('GET /', () => {
+  it('should return a greeting message', async () => {
+    const response = await request(app).get('/');
+
+    expect(response.status).toBe(200);
+    expect(response.text).toBe('My Personal Project Management App!');
   });
+});
+
+afterAll(() => {
+  server.close();
 });

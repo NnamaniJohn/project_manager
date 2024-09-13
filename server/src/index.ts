@@ -1,7 +1,16 @@
-const sayHello = (name: string): void => {
-  console.log(`Hello, ${name}!`);
-};
+import express from 'express';
 
-export const sum = (a: number, b: number) => a + b;
+const app = express();
+const port = process.env.PORT || 3000;
 
-sayHello('World');
+app.use(express.json());
+
+app.get('/', (req, res) => {
+  res.send('My Personal Project Management App!');
+});
+
+const server = app.listen(port, () => {
+  console.log(`Server is running at http://localhost:${port}`);
+});
+
+export { app, server };
