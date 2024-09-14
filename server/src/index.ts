@@ -4,7 +4,7 @@ import morgan from 'morgan';
 import helmet from 'helmet';
 import cors from 'cors';
 import { Request, Response } from 'express';
-import Project from './models/project';
+import project from './routes/project';
 import Task from './models/task';
 import dotenv from 'dotenv';
 
@@ -29,15 +29,7 @@ app.get('/', (req, res) => {
   res.send('My Personal Project Management App!');
 });
 
-app.get('/projects', async (req: Request, res: Response) => {
-  try {
-    const projects = await Project.findAll();
-
-    res.json(projects);
-  } catch (error) {
-    res.status(500).json({ message: 'Error fetching projects', error });
-  }
-});
+app.use('/projects', project);
 
 app.get('/tasks', async (req: Request, res: Response) => {
   try {
