@@ -5,7 +5,7 @@ interface ITask extends Document {
   description?: string;
   status: 'pending' | 'in-progress' | 'completed';
   dueDate?: Date;
-  projectId: mongoose.Types.ObjectId;
+  projectId: string;
 }
 
 const TaskSchema: Schema = new Schema({
@@ -17,7 +17,7 @@ const TaskSchema: Schema = new Schema({
     required: true,
   },
   dueDate: { type: Date },
-  projectId: { type: Schema.Types.ObjectId, ref: 'Project', required: true },
+  projectId: { type: String, required: true },
 });
 
 const Task = mongoose.model<ITask>('Task', TaskSchema);
