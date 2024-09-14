@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import Task from '../models/task';
+import { validationResult } from 'express-validator';
 
 export class TaskController {
   async index(req: Request, res: Response) {
@@ -21,10 +22,32 @@ export class TaskController {
   }
 
   async edit(req: Request, res: Response) {
-    res.send('edit');
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ success: false, errors: errors.array() });
+    }
+
+    try {
+      const id = req.params.id;
+      const task = await Task.findByIdAndUpdate(id, {
+        title: req.body.title,
+        description: req.body.description,
+        status: req.body.status,
+        dueDate: req.body.dueDate,
+      });
+      res.status(201).json({ success: true, data: task });
+    } catch (err) {
+      res.status(500).json({ error: `Internal Server Error: ${err}` });
+    }
   }
 
   async delete(req: Request, res: Response) {
-    res.send('delete');
+    try {
+      const id = req.params.id;
+      const task = await Task.findByIdAndDelete(id);
+      res.status(201).json({ success: true, data: task });
+    } catch (err) {
+      res.status(500).json({ error: `Internal Server Error: ${err}` });
+    }
   }
 }
