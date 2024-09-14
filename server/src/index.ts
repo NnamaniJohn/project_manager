@@ -3,10 +3,9 @@ import mongoose from 'mongoose';
 import morgan from 'morgan';
 import helmet from 'helmet';
 import cors from 'cors';
-import { Request, Response } from 'express';
 import project from './routes/project';
-import Task from './models/task';
 import dotenv from 'dotenv';
+import task from './routes/task';
 
 dotenv.config();
 
@@ -30,16 +29,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/projects', project);
-
-app.get('/tasks', async (req: Request, res: Response) => {
-  try {
-    const tasks = await Task.find().exec();
-
-    res.json(tasks);
-  } catch (error) {
-    res.status(500).json({ message: 'Error fetching tasks', error });
-  }
-});
+app.use('/tasks', task);
 
 const server = app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
