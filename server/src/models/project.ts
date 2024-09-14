@@ -3,7 +3,7 @@ import sequelize from '../database';
 
 interface ProjectAttributes {
   id: number;
-  name: string;
+  title: string;
   description?: string;
   createdAt?: Date;
   updatedAt?: Date;
@@ -16,7 +16,7 @@ class Project
   implements ProjectAttributes
 {
   public id!: number;
-  public name!: string;
+  public title!: string;
   public description?: string;
   public createdAt?: Date;
   public updatedAt?: Date;
@@ -29,7 +29,7 @@ Project.init(
       autoIncrement: true,
       primaryKey: true,
     },
-    name: {
+    title: {
       type: DataTypes.STRING,
       allowNull: false,
     },
