@@ -43,6 +43,13 @@ const Projects = () => {
     setIsModalOpen(false);
   };
 
+  const deleteProject = async (projectId: number) => {
+    await fetch(`http://localhost:3000/projects/${projectId}`, {
+      method: 'DELETE',
+    });
+    setProjects(projects.filter((project) => project.id !== projectId));
+  }
+
   useEffect(() => {
     fetch('http://localhost:3000/projects')
       .then((res) => res.json())
@@ -66,6 +73,7 @@ const Projects = () => {
         {(!isLoading && !projects.length) && <p className="text-black">No projects</p>}
         {(!isLoading && projects.length) && <ProjectList
           projects={projects}
+          deleteProject={deleteProject}
           openProjectModal={openProjectModal}
         />}
         <ProjectModal

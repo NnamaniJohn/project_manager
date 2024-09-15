@@ -22,7 +22,19 @@ export class ProjectController {
   }
 
   async show(req: Request, res: Response) {
-    res.send('show');
+    try {
+      const id = req.params.id;
+      const project = await Project.findOne({ where: { id } });
+      if (!project) {
+        return res
+          .status(404)
+          .json({ success: false, error: 'Project not found' });
+      }
+
+      res.json(project);
+    } catch (err) {
+      res.status(500).json({ error: `Internal Server Error: ${err}` });
+    }
   }
 
   async create(req: Request, res: Response) {
@@ -69,7 +81,22 @@ export class ProjectController {
   }
 
   async delete(req: Request, res: Response) {
-    res.send('delete');
+    try {
+      const id = req.params.id;
+      const project = await Project.findOne({ where: { id } });
+      if (!project) {
+        return res
+          .status(404)
+          .json({ success: false, error: 'Project not found' });
+      }
+
+      await project.destroy();
+      await Task.deleteMany({ projectId: id });
+
+      res.status(201).json({ success: true, data: project });
+    } catch (err) {
+      res.status(500).json({ error: `Internal Server Error: ${err}` });
+    }
   }
 
   async getProjectTasks(req: Request, res: Response) {

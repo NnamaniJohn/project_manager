@@ -4,10 +4,11 @@ import Link from 'next/link';
 
 interface Props {
   project: Project;
+  deleteProject: (projectId: number) => void;
   openProjectModal: (project: Project) => void;
 }
 
-const ProjectItem = ({ project, openProjectModal }: Props) => {
+const ProjectItem = ({ project, deleteProject, openProjectModal }: Props) => {
   return (
     <div className="bg-white shadow-lg rounded-lg p-6 hover:shadow-xl transition-shadow">
       <h2 className="text-2xl font-semibold text-gray-800 mb-2">{project.title}</h2>
@@ -26,6 +27,12 @@ const ProjectItem = ({ project, openProjectModal }: Props) => {
           >
             View Tasks
           </Link>
+          <button
+            onClick={() => deleteProject(project.id)}
+            className="bg-red-600 text-white ml-2 px-4 py-2 rounded-md hover:bg-red-700 transition"
+          >
+            Delete
+          </button>
         </div>
       </div>
     </div>

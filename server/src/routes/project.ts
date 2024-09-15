@@ -7,7 +7,7 @@ const projectController = new ProjectController();
 
 project.get('/', projectController.index);
 
-project.get('/:id/show', projectController.show);
+project.get('/:id', projectController.show);
 
 project.post(
   '/',
@@ -34,7 +34,7 @@ project.put(
   projectController.edit
 );
 
-project.delete('/:id/delete', projectController.delete);
+project.delete('/:id', projectController.delete);
 
 project.get('/:id/tasks', projectController.getProjectTasks);
 

@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import TaskList from '@/components/task-list';
 import TaskModal from '@/components/task-modal';
 import { Task, TaskStatus } from '@/types';
+import Link from 'next/link';
 
 const TaskManagement = ({
     params: {id},
@@ -16,7 +17,8 @@ const TaskManagement = ({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [taskToEdit, setTaskToEdit] = useState<Task | null>(null);
-  const [isLoading, setLoading] = useState(true);
+  const [isLoading, setLoading] = useState(true);;
+  const [project, setProject] = useState({ title: '', description: '' });
   const openEditModal = (task: React.SetStateAction<Task | null>) => {
     setTaskToEdit(task);
     setIsEditMode(true);
@@ -81,6 +83,12 @@ const TaskManagement = ({
         setTasks(data.map((task) => ({ ...task, id: task._id })))
         setLoading(false)
       })
+
+    fetch(`http://localhost:3000/projects/${id}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setProject(data)
+      })
   }, [])
 
   return (
@@ -88,7 +96,11 @@ const TaskManagement = ({
 
       <main className="container mx-auto px-6">
         <div className="flex justify-between items-center py-8 pt-24">
-          <h1 className="text-2xl font-bold text-blue-600">Manage Tasks for Project {id}</h1>
+          <h1 className="text-2xl font-bold text-blue-600">
+            <Link href="/projects">
+              My Projects
+            </Link>
+            {" - "} {project.title}</h1>
           <button
             onClick={addNewTask}
             className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition"

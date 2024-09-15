@@ -52,6 +52,7 @@ const ProjectModal = ({ isOpen, closeModal, isEditMode, projectToEdit, saveProje
         }
       } else {
         saveProject(projectData);
+        setProjectData({ title: '', description: '' });
         setError(null);
         setValidationErrors([]);
       }

@@ -57,6 +57,7 @@ const TaskModal = ({ projectId, isOpen, closeModal, isEditMode, taskToEdit, save
         }
       } else {
         saveTask(taskData);
+        setTaskData({ title: '', description: '', dueDate: '', status: TaskStatus.Pending });
         setError(null);
         setValidationErrors([]);
       }
@@ -106,7 +107,7 @@ const TaskModal = ({ projectId, isOpen, closeModal, isEditMode, taskToEdit, save
             name="title"
             value={taskData.title}
             onChange={handleInputChange}
-            className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600"
+            className="w-full p-2 border border-gray-300 text-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600"
             placeholder="Enter task title"
           />
         </div>
@@ -116,7 +117,7 @@ const TaskModal = ({ projectId, isOpen, closeModal, isEditMode, taskToEdit, save
             name="description"
             value={taskData.description}
             onChange={handleInputChange}
-            className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600"
+            className="w-full p-2 border border-gray-300 text-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600"
             placeholder="Enter task description"
           ></textarea>
         </div>
@@ -127,7 +128,7 @@ const TaskModal = ({ projectId, isOpen, closeModal, isEditMode, taskToEdit, save
             name="dueDate"
             value={taskData.dueDate}
             onChange={handleInputChange}
-            className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600"
+            className="w-full p-2 border border-gray-300 text-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600"
           />
         </div>
         <div className="mb-4">
@@ -136,7 +137,7 @@ const TaskModal = ({ projectId, isOpen, closeModal, isEditMode, taskToEdit, save
             name="status"
             value={taskData.status}
             onChange={handleInputChange}
-            className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600"
+            className="w-full p-2 border border-gray-300 text-gray-600 arounded-md focus:outline-none focus:ring-2 focus:ring-blue-600"
           >
             <option value={TaskStatus.Pending}>Pending</option>
             <option value={TaskStatus.InProgress}>In-Progress</option>
