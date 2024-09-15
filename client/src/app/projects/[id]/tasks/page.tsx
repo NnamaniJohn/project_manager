@@ -1,36 +1,9 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import TaskList from '@/components/task-list';
 import TaskModal from '@/components/task-modal';
 import { Task, TaskStatus } from '@/types';
-
-const initialTasks: Task[] = [
-  {
-    id: 1,
-    title: 'Design homepage',
-    description: 'Create a new design for the homepage.',
-    status: TaskStatus.Pending,
-    dueDate: '2024-09-20',
-    projectId: 1,
-  },
-  {
-    id: 2,
-    title: 'Set up database',
-    description: 'Create a MySQL database for the project.',
-    status: TaskStatus.InProgress,
-    dueDate: '2024-09-18',
-    projectId: 1,
-  },
-  {
-    id: 3,
-    title: 'Develop login functionality',
-    description: 'Build the login system with JWT authentication.',
-    status: TaskStatus.Completed,
-    dueDate: '2024-09-22',
-    projectId: 1,
-  },
-];
 
 const TaskManagement = ({
     params: {id},
@@ -39,10 +12,11 @@ const TaskManagement = ({
       id: number;
   };
 }) => {
-  const [tasks, setTasks] = useState(initialTasks);
+  const [tasks, setTasks] = useState([] as Task[]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [taskToEdit, setTaskToEdit] = useState<Task | null>(null);
+  const [isLoading, setLoading] = useState(true);
   const openEditModal = (task: React.SetStateAction<Task | null>) => {
     setTaskToEdit(task);
     setIsEditMode(true);
@@ -86,6 +60,15 @@ const TaskManagement = ({
     );
   };
 
+  useEffect(() => {
+    fetch(`http://localhost:3000/projects/${id}/tasks`)
+      .then((res) => res.json())
+      .then((data) => {
+        setTasks(data)
+        setLoading(false)
+      })
+  }, [])
+
   return (
     <div className="min-h-screen bg-gray-100">
 
@@ -101,12 +84,14 @@ const TaskManagement = ({
         </div>
         <h4 className="text-xl font-bold text-blue-600 mb-3">MY Tasks</h4>
 
-        <TaskList
+        {isLoading && <p className="text-black">Loading...</p>}
+        {(!isLoading && !tasks.length) && <p className="text-black">No Tasks</p>}
+        {(!isLoading && tasks.length) && <TaskList
           tasks={tasks}
           openEditModal={openEditModal}
           deleteTask={deleteTask}
           updateStatus={updateStatus}
-        />
+        />}
         <TaskModal
           isOpen={isModalOpen}
           closeModal={() => setIsModalOpen(false)}
