@@ -36,7 +36,7 @@ const Projects = () => {
       const newProject = {
         ...projectData,
         id: projects.length + 1,
-        taskCount: 0,
+        tasksCount: 0,
       };
       setProjects([...projects, newProject]);
     }

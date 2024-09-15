@@ -6,7 +6,7 @@ interface Props {
   closeModal: () => void;
   isEditMode: boolean;
   projectToEdit: Project | null;
-  saveProject: (project: any) => void;
+  saveProject: (project: Project) => void;
 }
 
 const ProjectModal = ({ isOpen, closeModal, isEditMode, projectToEdit, saveProject }: Props) => {
@@ -14,6 +14,8 @@ const ProjectModal = ({ isOpen, closeModal, isEditMode, projectToEdit, saveProje
     title: '',
     description: ''
   });
+  const [error, setError] = useState<string | null>(null);
+  const [validationErrors, setValidationErrors] = useState<string[]>([]);
 
   useEffect(() => {
     if (isEditMode && projectToEdit) {
@@ -32,20 +34,50 @@ const ProjectModal = ({ isOpen, closeModal, isEditMode, projectToEdit, saveProje
   };
 
   const handleSubmit = async () => {
-    await createRequest();
-    saveProject(projectData);
+    try {
+      let response;
+      if (isEditMode) {
+        response = await updateRequest();
+      } else {
+        response = await createRequest();
+      }
+
+      const data = await response.json();
+
+      if (!data.success) {
+        if (data.errors) {
+          setValidationErrors(data.errors.map((err: any) => err.msg));
+        } else {
+          setError('An error occurred while saving the project. Please try again.');
+        }
+      } else {
+        saveProject(projectData);
+        setError(null);
+        setValidationErrors([]);
+      }
+    } catch (err) {
+      setError('An error occurred while saving the project. Please try again.');
+    }
   };
 
   const createRequest = async () => {
-    const response = await fetch('http://localhost:3000/projects/', {
+    return await fetch('http://localhost:3000/projects/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(projectData),
     });
+  }
 
-    return response.json();
+  const updateRequest = async () => {
+    return await fetch(`http://localhost:3000/projects/${projectToEdit?.id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(projectData),
+    });
   }
 
   if (!isOpen) return null;
@@ -54,6 +86,14 @@ const ProjectModal = ({ isOpen, closeModal, isEditMode, projectToEdit, saveProje
     <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-lg">
         <h2 className="text-2xl font-semibold text-gray-800 mb-4">{isEditMode ? 'Edit Project' : 'Add New Project'}</h2>
+        {error && <div className="text-red-500 mb-4">{error}</div>}
+        {validationErrors.length > 0 && (
+          <ul className="text-red-500 mb-4">
+            {validationErrors.map((err, index) => (
+              <li key={index}>{err}</li>
+            ))}
+          </ul>
+        )}
         <div className="mb-4">
           <label className="block text-gray-600 mb-2">Project Title</label>
           <input
@@ -61,7 +101,7 @@ const ProjectModal = ({ isOpen, closeModal, isEditMode, projectToEdit, saveProje
             name="title"
             value={projectData.title}
             onChange={handleInputChange}
-            className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600"
+            className="w-full p-2 border border-gray-300 text-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600"
             placeholder="Enter project title"
           />
         </div>
@@ -71,7 +111,7 @@ const ProjectModal = ({ isOpen, closeModal, isEditMode, projectToEdit, saveProje
             name="description"
             value={projectData.description}
             onChange={handleInputChange}
-            className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600"
+            className="w-full p-2 border border-gray-300 text-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600"
             placeholder="Enter project description"
           ></textarea>
         </div>

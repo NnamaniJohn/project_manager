@@ -21,7 +21,18 @@ project.post(
   projectController.create
 );
 
-project.put('/:id/update', projectController.edit);
+project.put(
+  '/:id',
+  [
+    param('id').isInt().withMessage('Invalid project ID'),
+    body('title').notEmpty().withMessage('Title is required'),
+    body('description')
+      .optional()
+      .isString()
+      .withMessage('Description must be a string'),
+  ],
+  projectController.edit
+);
 
 project.delete('/:id/delete', projectController.delete);
 

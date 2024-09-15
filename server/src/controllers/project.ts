@@ -42,7 +42,30 @@ export class ProjectController {
   }
 
   async edit(req: Request, res: Response) {
-    res.send('edit');
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ success: false, errors: errors.array() });
+    }
+
+    const { id } = req.params;
+    const { title, description } = req.body;
+
+    try {
+      const project = await Project.findOne({ where: { id } });
+      if (!project) {
+        return res
+          .status(404)
+          .json({ success: false, error: 'Project not found' });
+      }
+
+      project.title = title;
+      project.description = description;
+      await project.save();
+
+      res.json({ success: true, data: project });
+    } catch (err) {
+      res.status(500).json({ error: `Internal Server Error: ${err}` });
+    }
   }
 
   async delete(req: Request, res: Response) {
