@@ -10,7 +10,7 @@ interface Props {
 }
 
 const TaskModal = ({ isOpen, closeModal, isEditMode, taskToEdit, saveTask }: Props) => {
-  const [taskData, setTaskData] = useState({
+  const [taskData, setTaskData] = useState<Task>({
     title: '',
     description: '',
     dueDate: '',
@@ -30,7 +30,7 @@ const TaskModal = ({ isOpen, closeModal, isEditMode, taskToEdit, saveTask }: Pro
     }
   }, [isEditMode, taskToEdit]);
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setTaskData({ ...taskData, [name]: value });
   };

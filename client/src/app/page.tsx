@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 export default function Home() {
   return (
     <section className="bg-blue-600 text-white h-screen flex flex-col justify-center items-center">
@@ -8,13 +10,9 @@ export default function Home() {
           everything at your fingertips.
         </p>
         <div>
-          <button className="bg-white text-blue-600 px-6 py-3 rounded-md font-semibold hover:bg-gray-200 transition">
+          <Link href="/projects" className="bg-white text-blue-600 px-6 py-3 rounded-md font-semibold hover:bg-gray-200 transition">
             My Projects
-          </button>
-          <button
-            className="bg-transparent text-white border border-white ml-4 px-6 py-3 rounded-md hover:bg-white hover:text-blue-600 transition">
-            New Project
-          </button>
+          </Link>
         </div>
       </div>
     </section>

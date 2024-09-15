@@ -1,17 +1,18 @@
 export interface Task {
-  id: number;
+  id?: number;
   title: string;
   description?: string;
   dueDate?: string;
   status: TaskStatus;
-  projectId: number;
+  projectId?: number;
 }
 
 export interface Project {
-  id: number;
+  id?: number;
   title: string;
   description?: string;
-  tasks: Task[];
+  tasks?: Task[];
+  tasksCount?: number;
 }
 
 export enum TaskStatus {
