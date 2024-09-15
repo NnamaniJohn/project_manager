@@ -48,11 +48,15 @@ const TaskManagement = ({
     setIsModalOpen(false);
   };
 
-  const deleteTask = (taskId: number) => {
+  const deleteTask = async (taskId: number) => {
+    await fetch(`http://localhost:3000/tasks/${taskId}`, {
+      method: 'DELETE',
+    });
     setTasks(tasks.filter((task) => task.id !== taskId));
   };
 
-  const updateStatus = (taskId: number, newStatus: TaskStatus) => {
+  const updateStatus = async (taskId: number, newStatus: TaskStatus) => {
+    await updateRequest({ ...tasks.find((task) => task.id === taskId), status: newStatus });
     setTasks(
       tasks.map((task) =>
         task.id === taskId ? { ...task, status: newStatus } : task
@@ -60,11 +64,21 @@ const TaskManagement = ({
     );
   };
 
+  const updateRequest = async (taskData) => {
+    return fetch(`http://localhost:3000/tasks/${taskData?._id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(taskData),
+    });
+  }
+
   useEffect(() => {
     fetch(`http://localhost:3000/projects/${id}/tasks`)
       .then((res) => res.json())
       .then((data) => {
-        setTasks(data)
+        setTasks(data.map((task) => ({ ...task, id: task._id })))
         setLoading(false)
       })
   }, [])
@@ -93,6 +107,7 @@ const TaskManagement = ({
           updateStatus={updateStatus}
         />}
         <TaskModal
+          projectId={id}
           isOpen={isModalOpen}
           closeModal={() => setIsModalOpen(false)}
           isEditMode={isEditMode}

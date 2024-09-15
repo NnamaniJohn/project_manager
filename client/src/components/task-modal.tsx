@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Task, TaskStatus } from '@/types';
 
 interface Props {
+  projectId: number;
   isOpen: boolean;
   closeModal: () => void;
   isEditMode: boolean;
@@ -9,13 +10,15 @@ interface Props {
   saveTask: (task: Task) => void;
 }
 
-const TaskModal = ({ isOpen, closeModal, isEditMode, taskToEdit, saveTask }: Props) => {
+const TaskModal = ({ projectId, isOpen, closeModal, isEditMode, taskToEdit, saveTask }: Props) => {
   const [taskData, setTaskData] = useState<Task>({
     title: '',
     description: '',
     dueDate: '',
     status: TaskStatus.Pending
   });
+  const [error, setError] = useState<string | null>(null);
+  const [validationErrors, setValidationErrors] = useState<string[]>([]);
 
   useEffect(() => {
     if (isEditMode && taskToEdit) {
@@ -35,9 +38,52 @@ const TaskModal = ({ isOpen, closeModal, isEditMode, taskToEdit, saveTask }: Pro
     setTaskData({ ...taskData, [name]: value });
   };
 
-  const handleSubmit = () => {
-    saveTask(taskData);
+  const handleSubmit = async () => {
+    try {
+      let response;
+      if (isEditMode) {
+        response = await updateRequest();
+      } else {
+        response = await createRequest();
+      }
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        if (data.errors) {
+          setValidationErrors(data.errors.map((err: any) => err.msg));
+        } else {
+          setError('An error occurred while saving the task. Please try again.');
+        }
+      } else {
+        saveTask(taskData);
+        setError(null);
+        setValidationErrors([]);
+      }
+    } catch (err) {
+      setError('An error occurred while saving the task. Please try again.');
+    }
   };
+
+  const createRequest = async () => {
+    return fetch(`http://localhost:3000/projects/${projectId}/tasks`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(taskData),
+    });
+  }
+
+  const updateRequest = async () => {
+    return fetch(`http://localhost:3000/tasks/${taskToEdit?._id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(taskData),
+    });
+  }
 
   if (!isOpen) return null;
 
@@ -45,6 +91,14 @@ const TaskModal = ({ isOpen, closeModal, isEditMode, taskToEdit, saveTask }: Pro
     <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-lg">
         <h2 className="text-2xl font-semibold text-gray-800 mb-4">{isEditMode ? 'Edit Task' : 'Add New Task'}</h2>
+        {error && <div className="text-red-500 mb-4">{error}</div>}
+        {validationErrors.length > 0 && (
+          <ul className="text-red-500 mb-4">
+            {validationErrors.map((err, index) => (
+              <li key={index}>{err}</li>
+            ))}
+          </ul>
+        )}
         <div className="mb-4">
           <label className="block text-gray-600 mb-2">Task Title</label>
           <input

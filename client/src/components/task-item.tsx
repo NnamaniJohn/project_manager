@@ -26,7 +26,7 @@ const TaskItem = ({ task, openEditModal, deleteTask, updateStatus }: Props) => {
     <div className="bg-white shadow-lg rounded-lg p-6 hover:shadow-xl transition-shadow">
       <h2 className="text-2xl font-semibold text-gray-800 mb-2">{task.title}</h2>
       <p className="text-gray-600 mb-2">{task.description}</p>
-      <p className="text-gray-500 mb-2">Due: {task.dueDate}</p>
+      <p className="text-gray-500 mb-2">Due: {task.dueDate ? (new Date(task.dueDate as string)).toLocaleDateString() : ''}</p>
       <div className={`inline-block px-3 py-1 text-sm font-semibold text-white rounded-full ${getStatusBadgeColor(task.status)}`}>
         {task.status}
       </div>
