@@ -8,7 +8,14 @@ export class ProjectController {
     try {
       const projects = await Project.findAll();
 
-      res.json(projects);
+      const projectsWithTasks = await Promise.all(
+        projects.map(async (project) => {
+          const tasks = await Task.find({ projectId: project.id });
+          return { ...project.toJSON(), tasks, tasksCount: tasks.length };
+        })
+      );
+
+      res.json(projectsWithTasks);
     } catch (err) {
       res.send(`an error occur${err}`);
     }

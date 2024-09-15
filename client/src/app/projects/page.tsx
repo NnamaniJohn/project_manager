@@ -1,36 +1,16 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Project } from '@/types';
 import ProjectModal from '@/components/project-modal';
 import ProjectList from '@/components/project-list';
 
-const initialProjects: Project[] = [
-  {
-    id: 1,
-    title: 'Website Redesign',
-    description: 'Redesigning the company website for a fresh, modern look.',
-    tasksCount: 5,
-  },
-  {
-    id: 2,
-    title: 'Mobile App Development',
-    description: 'Building a new mobile app for Android and iOS platforms.',
-    tasksCount: 12,
-  },
-  {
-    id: 3,
-    title: 'Marketing Campaign',
-    description: 'Launching a digital marketing campaign for the new product.',
-    tasksCount: 8,
-  },
-];
-
 const Projects = () => {
-  const [projects, setProjects] = useState(initialProjects);
+  const [projects, setProjects] = useState([] as Project[]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [projectToEdit, setProjectToEdit] = useState<Project | null>(null);
+  const [isLoading, setLoading] = useState(true)
 
   const openProjectModal = (project: React.SetStateAction<Project | null>) => {
     setProjectToEdit(project);
@@ -63,6 +43,15 @@ const Projects = () => {
     setIsModalOpen(false);
   };
 
+  useEffect(() => {
+    fetch('http://localhost:3000/projects')
+      .then((res) => res.json())
+      .then((data) => {
+        setProjects(data)
+        setLoading(false)
+      })
+  }, [])
+
   return (
       <div className="container min-h-screen bg-gray-100 mx-auto px-6">
         <div className="flex justify-between items-center py-8 pt-24">
@@ -72,10 +61,13 @@ const Projects = () => {
             className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">New Project
           </button>
         </div>
-        <ProjectList
+
+        {isLoading && <p className="text-black">Loading...</p>}
+        {(!isLoading && !projects.length) && <p className="text-black">No projects</p>}
+        {(!isLoading && projects.length) && <ProjectList
           projects={projects}
           openProjectModal={openProjectModal}
-        />
+        />}
         <ProjectModal
           isOpen={isModalOpen}
           closeModal={() => setIsModalOpen(false)}

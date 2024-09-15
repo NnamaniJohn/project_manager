@@ -31,9 +31,22 @@ const ProjectModal = ({ isOpen, closeModal, isEditMode, projectToEdit, saveProje
     setProjectData({ ...projectData, [name]: value });
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    await createRequest();
     saveProject(projectData);
   };
+
+  const createRequest = async () => {
+    const response = await fetch('http://localhost:3000/projects/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(projectData),
+    });
+
+    return response.json();
+  }
 
   if (!isOpen) return null;
 
