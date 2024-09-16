@@ -94,6 +94,13 @@ Make sure you have the following installed:
 
     Rename the `.env.example` file to `.env` and update the environment variables as needed.
 
+6. **Run migrations**:
+
+   ```bash
+   cd server
+   npx db-migrate up
+   ```
+
 ## Running the Application
 
 To run the application, follow the steps below:
