@@ -67,7 +67,7 @@ const TaskModal = ({ projectId, isOpen, closeModal, isEditMode, taskToEdit, save
   };
 
   const createRequest = async () => {
-    return fetch(`http://localhost:3000/projects/${projectId}/tasks`, {
+    return fetch(`${process.env.NEXT_PUBLIC_API_URL}/projects/${projectId}/tasks`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -77,7 +77,7 @@ const TaskModal = ({ projectId, isOpen, closeModal, isEditMode, taskToEdit, save
   }
 
   const updateRequest = async () => {
-    return fetch(`http://localhost:3000/tasks/${taskToEdit?._id}`, {
+    return fetch(`${process.env.NEXT_PUBLIC_API_URL}/tasks/${taskToEdit?._id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',

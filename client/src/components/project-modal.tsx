@@ -62,7 +62,7 @@ const ProjectModal = ({ isOpen, closeModal, isEditMode, projectToEdit, saveProje
   };
 
   const createRequest = async () => {
-    return await fetch('http://localhost:3000/projects/', {
+    return await fetch(`${process.env.NEXT_PUBLIC_API_URL}/projects/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -72,7 +72,7 @@ const ProjectModal = ({ isOpen, closeModal, isEditMode, projectToEdit, saveProje
   }
 
   const updateRequest = async () => {
-    return await fetch(`http://localhost:3000/projects/${projectToEdit?.id}`, {
+    return await fetch(`${process.env.NEXT_PUBLIC_API_URL}/projects/${projectToEdit?.id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',

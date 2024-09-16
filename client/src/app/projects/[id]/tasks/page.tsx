@@ -51,7 +51,7 @@ const TaskManagement = ({
   };
 
   const deleteTask = async (taskId: number) => {
-    await fetch(`http://localhost:3000/tasks/${taskId}`, {
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/tasks/${taskId}`, {
       method: 'DELETE',
     });
     setTasks(tasks.filter((task) => task.id !== taskId));
@@ -67,7 +67,7 @@ const TaskManagement = ({
   };
 
   const updateRequest = async (taskData) => {
-    return fetch(`http://localhost:3000/tasks/${taskData?._id}`, {
+    return fetch(`${process.env.NEXT_PUBLIC_API_URL}/tasks/${taskData?._id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -77,14 +77,14 @@ const TaskManagement = ({
   }
 
   useEffect(() => {
-    fetch(`http://localhost:3000/projects/${id}/tasks`)
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/projects/${id}/tasks`)
       .then((res) => res.json())
       .then((data) => {
         setTasks(data.map((task) => ({ ...task, id: task._id })))
         setLoading(false)
       })
 
-    fetch(`http://localhost:3000/projects/${id}`)
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/projects/${id}`)
       .then((res) => res.json())
       .then((data) => {
         setProject(data)

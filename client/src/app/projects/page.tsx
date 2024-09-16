@@ -44,14 +44,15 @@ const Projects = () => {
   };
 
   const deleteProject = async (projectId: number) => {
-    await fetch(`http://localhost:3000/projects/${projectId}`, {
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/projects/${projectId}`, {
       method: 'DELETE',
     });
     setProjects(projects.filter((project) => project.id !== projectId));
   }
 
+  console.log(process.env);
   useEffect(() => {
-    fetch('http://localhost:3000/projects')
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/projects`)
       .then((res) => res.json())
       .then((data) => {
         setProjects(data)
