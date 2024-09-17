@@ -1,4 +1,7 @@
-import Header from '@/layouts/header';
+import dynamic from 'next/dynamic';
+
+const Header = dynamic(() => import('@/layouts/header'), { ssr: false });
+
 
 export default function DefaultLayout({
   children,
