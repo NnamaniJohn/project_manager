@@ -1,6 +1,7 @@
 import express from 'express';
 import { body, param } from 'express-validator';
 import { ProjectController } from '../controllers/project';
+import verifyAuthToken from '../middleware/auth';
 
 const project: express.Router = express.Router();
 const projectController = new ProjectController();
@@ -11,6 +12,7 @@ project.get('/:id', projectController.show);
 
 project.post(
   '/',
+  verifyAuthToken,
   [
     body('title').notEmpty().withMessage('Title is required'),
     body('description')
@@ -23,6 +25,7 @@ project.post(
 
 project.put(
   '/:id',
+  verifyAuthToken,
   [
     param('id').isInt().withMessage('Invalid project ID'),
     body('title').notEmpty().withMessage('Title is required'),
@@ -34,12 +37,13 @@ project.put(
   projectController.edit
 );
 
-project.delete('/:id', projectController.delete);
+project.delete('/:id', verifyAuthToken, projectController.delete);
 
 project.get('/:id/tasks', projectController.getProjectTasks);
 
 project.post(
   '/:id/tasks',
+  verifyAuthToken,
   [
     param('id').isInt().withMessage('Invalid project ID'),
     body('title').notEmpty().withMessage('Title is required'),

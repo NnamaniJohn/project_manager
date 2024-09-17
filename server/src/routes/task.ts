@@ -1,6 +1,7 @@
 import express from 'express';
 import { body, param } from 'express-validator';
 import { TaskController } from '../controllers/task';
+import verifyAuthToken from '../middleware/auth';
 
 const task: express.Router = express.Router();
 const taskController = new TaskController();
@@ -9,10 +10,11 @@ task.get('/', taskController.index);
 
 task.get('/:id/show', taskController.show);
 
-task.post('/create', taskController.create);
+task.post('/create', verifyAuthToken, taskController.create);
 
 task.put(
   '/:id',
+  verifyAuthToken,
   [
     param('id').isMongoId().withMessage('Invalid task ID'),
     body('title').notEmpty().withMessage('Title is required'),
@@ -34,6 +36,6 @@ task.put(
   taskController.edit
 );
 
-task.delete('/:id', taskController.delete);
+task.delete('/:id', verifyAuthToken, taskController.delete);
 
 export default task;

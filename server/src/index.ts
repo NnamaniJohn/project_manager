@@ -6,6 +6,7 @@ import cors from 'cors';
 import project from './routes/project';
 import dotenv from 'dotenv';
 import task from './routes/task';
+import { auth } from './routes/auth';
 
 dotenv.config();
 
@@ -28,6 +29,7 @@ app.get('/', (req, res) => {
   res.send('My Personal Project Management App!');
 });
 
+app.use('/auth', auth);
 app.use('/projects', project);
 app.use('/tasks', task);
 
