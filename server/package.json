@@ -6,6 +6,7 @@
   "scripts": {
     "start": "ts-node src/index.ts",
     "build": "tsc",
+    "prod": "node dist/index.js",
     "start:watch": "nodemon",
     "test": "jest --detectOpenHandles",
     "lint": "eslint 'src/**/*.{ts,js}'",
