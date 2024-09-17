@@ -14,8 +14,6 @@ export class AuthController {
 
     const { username, password } = req.body;
 
-    console.log('username', username);
-    console.log('password', password);
     try {
       const user = await User.create({ username, password });
       res.status(201).json({ message: 'User registered successfully', user });

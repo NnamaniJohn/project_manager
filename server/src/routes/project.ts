@@ -6,9 +6,13 @@ import verifyAuthToken from '../middleware/auth';
 const project: express.Router = express.Router();
 const projectController = new ProjectController();
 
-project.get('/', projectController.index);
+project.get('/',
+  verifyAuthToken,
+  projectController.index);
 
-project.get('/:id', projectController.show);
+project.get('/:id',
+  verifyAuthToken,
+  projectController.show);
 
 project.post(
   '/',
@@ -39,7 +43,9 @@ project.put(
 
 project.delete('/:id', verifyAuthToken, projectController.delete);
 
-project.get('/:id/tasks', projectController.getProjectTasks);
+project.get('/:id/tasks',
+  verifyAuthToken,
+  projectController.getProjectTasks);
 
 project.post(
   '/:id/tasks',

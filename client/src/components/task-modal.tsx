@@ -67,20 +67,24 @@ const TaskModal = ({ projectId, isOpen, closeModal, isEditMode, taskToEdit, save
   };
 
   const createRequest = async () => {
+    const token = localStorage.getItem("token");
     return fetch(`${process.env.NEXT_PUBLIC_API_URL}/projects/${projectId}/tasks`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(taskData),
     });
   }
 
   const updateRequest = async () => {
+    const token = localStorage.getItem("token");
     return fetch(`${process.env.NEXT_PUBLIC_API_URL}/tasks/${taskToEdit?._id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(taskData),
     });

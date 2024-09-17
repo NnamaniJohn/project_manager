@@ -62,20 +62,24 @@ const ProjectModal = ({ isOpen, closeModal, isEditMode, projectToEdit, saveProje
   };
 
   const createRequest = async () => {
+    const token = localStorage.getItem("token");
     return await fetch(`${process.env.NEXT_PUBLIC_API_URL}/projects/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(projectData),
     });
   }
 
   const updateRequest = async () => {
+    const token = localStorage.getItem("token");
     return await fetch(`${process.env.NEXT_PUBLIC_API_URL}/projects/${projectToEdit?.id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(projectData),
     });

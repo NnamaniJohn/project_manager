@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { Project } from '@/types';
 import ProjectModal from '@/components/project-modal';
 import ProjectList from '@/components/project-list';
+import useAuth from '@/components/use-auth';
 
 const Projects = () => {
   const [projects, setProjects] = useState([] as Project[]);
@@ -47,14 +48,23 @@ const Projects = () => {
   };
 
   const deleteProject = async (projectId: number) => {
+    const token = localStorage.getItem("token");
     await fetch(`${process.env.NEXT_PUBLIC_API_URL}/projects/${projectId}`, {
       method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     });
     setProjects(projects.filter((project) => project.id !== projectId));
   }
 
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/projects`)
+    const token = localStorage.getItem("token");
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/projects`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
       .then((res) => res.json())
       .then((data) => {
         setProjects(data)
@@ -105,4 +115,4 @@ const Projects = () => {
   );
 };
 
-export default Projects;
+export default useAuth(Projects);

@@ -6,9 +6,13 @@ import verifyAuthToken from '../middleware/auth';
 const task: express.Router = express.Router();
 const taskController = new TaskController();
 
-task.get('/', taskController.index);
+task.get('/',
+  verifyAuthToken,
+  taskController.index);
 
-task.get('/:id/show', taskController.show);
+task.get('/:id/show',
+  verifyAuthToken,
+  taskController.show);
 
 task.post('/create', verifyAuthToken, taskController.create);
 

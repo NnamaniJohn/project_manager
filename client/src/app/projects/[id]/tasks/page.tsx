@@ -5,6 +5,7 @@ import TaskList from '@/components/task-list';
 import TaskModal from '@/components/task-modal';
 import { Task, TaskStatus } from '@/types';
 import Link from 'next/link';
+import useAuth from '@/components/use-auth';
 
 const TaskManagement = ({
     params: {id},
@@ -55,13 +56,18 @@ const TaskManagement = ({
   };
 
   const deleteTask = async (taskId: number) => {
+    const token = localStorage.getItem("token");
     await fetch(`${process.env.NEXT_PUBLIC_API_URL}/tasks/${taskId}`, {
       method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     });
     setTasks(tasks.filter((task) => task.id !== taskId));
   };
 
   const updateStatus = async (taskId: number, newStatus: TaskStatus) => {
+    const token = localStorage.getItem("token");
     const updateTask = tasks.find((task) => task.id === taskId);
     await updateRequest({ ...updateTask, title: updateTask?.title as string, status: newStatus });
     setTasks(
@@ -72,24 +78,35 @@ const TaskManagement = ({
   };
 
   const updateRequest = async (taskData: Task) => {
+    const token = localStorage.getItem("token");
     return fetch(`${process.env.NEXT_PUBLIC_API_URL}/tasks/${taskData?._id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(taskData),
     });
   }
 
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/projects/${id}/tasks`)
+    const token = localStorage.getItem("token");
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/projects/${id}/tasks`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
       .then((res) => res.json())
       .then((data) => {
         setTasks(data.map((task: Task) => ({ ...task, id: task._id })))
         setLoading(false)
       })
 
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/projects/${id}`)
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/projects/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
       .then((res) => res.json())
       .then((data) => {
         setProject(data)
@@ -153,4 +170,4 @@ const TaskManagement = ({
   );
 };
 
-export default TaskManagement;
+export default useAuth(TaskManagement);
