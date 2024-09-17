@@ -6,7 +6,6 @@ import { Task, TaskStatus } from '@/types';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
 
-const UseAuth = dynamic(() => import('@/components/use-auth'), { ssr: false });
 const TaskModal = dynamic(() => import('@/components/task-modal'), { ssr: false });
 
 const Tasks = ({
@@ -123,7 +122,7 @@ const Tasks = ({
   }, [searchTerm, tasks]);
 
   return (
-    <UseAuth>
+    <>
       <div className="min-h-screen bg-gray-100">
 
         <main className="container mx-auto px-6">
@@ -169,7 +168,7 @@ const Tasks = ({
 
         </main>
       </div>
-    </UseAuth>
+    </>
   );
 };
 

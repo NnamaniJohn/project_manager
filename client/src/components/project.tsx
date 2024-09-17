@@ -5,7 +5,6 @@ import { Project } from '@/types';
 import ProjectList from '@/components/project-list';
 import dynamic from 'next/dynamic';
 
-const UseAuth = dynamic(() => import('@/components/use-auth'), { ssr: false });
 const ProjectModal = dynamic(() => import('@/components/project-modal'), { ssr: false });
 
 const Projects = () => {
@@ -83,7 +82,7 @@ const Projects = () => {
   }, [searchTerm, projects]);
 
   return (
-    <UseAuth>
+    <>
       <div className="container min-h-screen bg-gray-100 mx-auto px-6">
         <div className="flex justify-between items-center py-8 pt-24">
           <h1 className="text-4xl font-bold text-blue-600">MY Projects</h1>
@@ -115,7 +114,7 @@ const Projects = () => {
           saveProject={saveProject}
         />
       </div>
-    </UseAuth>
+    </>
   );
 };
 
