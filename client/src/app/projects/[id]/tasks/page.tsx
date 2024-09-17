@@ -5,7 +5,7 @@ import TaskList from '@/components/task-list';
 import TaskModal from '@/components/task-modal';
 import { Task, TaskStatus } from '@/types';
 import Link from 'next/link';
-import useAuth from '@/components/use-auth';
+import UseAuth from '@/components/use-auth';
 
 const TaskManagement = ({
     params: {id},
@@ -67,7 +67,6 @@ const TaskManagement = ({
   };
 
   const updateStatus = async (taskId: number, newStatus: TaskStatus) => {
-    const token = localStorage.getItem("token");
     const updateTask = tasks.find((task) => task.id === taskId);
     await updateRequest({ ...updateTask, title: updateTask?.title as string, status: newStatus });
     setTasks(
@@ -122,52 +121,54 @@ const TaskManagement = ({
   }, [searchTerm, tasks]);
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <UseAuth>
+      <div className="min-h-screen bg-gray-100">
 
-      <main className="container mx-auto px-6">
-        <div className="flex justify-between items-center py-8 pt-24">
-          <h1 className="text-2xl font-bold text-blue-600">
-            <Link href="/projects">
-              My Projects
-            </Link>
-            {" - "} {project.title}</h1>
+        <main className="container mx-auto px-6">
+          <div className="flex justify-between items-center py-8 pt-24">
+            <h1 className="text-2xl font-bold text-blue-600">
+              <Link href="/projects">
+                My Projects
+              </Link>
+              {" - "} {project.title}</h1>
 
-          <div>
-            <input
-              type="text"
-              placeholder="Search tasks"
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="border border-gray-300 rounded-md px-4 py-2 mr-2 text-gray-600"
-            />
-            <button
-              onClick={addNewTask}
-              className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition"
-            >
-              Add New Task
-            </button>
+            <div>
+              <input
+                type="text"
+                placeholder="Search tasks"
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="border border-gray-300 rounded-md px-4 py-2 mr-2 text-gray-600"
+              />
+              <button
+                onClick={addNewTask}
+                className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition"
+              >
+                Add New Task
+              </button>
+            </div>
           </div>
-        </div>
-        <h4 className="text-xl font-bold text-blue-600 mb-3">MY Tasks</h4>
+          <h4 className="text-xl font-bold text-blue-600 mb-3">MY Tasks</h4>
 
-        {isLoading && <p className="text-black">Loading...</p>}
-        {(!isLoading && tasks.length) && <TaskList
-          tasks={filteredTasks}
-          openEditModal={openEditModal}
-          deleteTask={deleteTask}
-          updateStatus={updateStatus}
-        />}
-        <TaskModal
-          projectId={id}
-          isOpen={isModalOpen}
-          closeModal={() => setIsModalOpen(false)}
-          isEditMode={isEditMode}
-          taskToEdit={taskToEdit}
-          saveTask={saveTask}
-        />
+          {isLoading && <p className="text-black">Loading...</p>}
+          {(!isLoading && tasks.length) && <TaskList
+            tasks={filteredTasks}
+            openEditModal={openEditModal}
+            deleteTask={deleteTask}
+            updateStatus={updateStatus}
+          />}
+          <TaskModal
+            projectId={id}
+            isOpen={isModalOpen}
+            closeModal={() => setIsModalOpen(false)}
+            isEditMode={isEditMode}
+            taskToEdit={taskToEdit}
+            saveTask={saveTask}
+          />
 
-      </main>
-    </div>
+        </main>
+      </div>
+    </UseAuth>
   );
 };
 
-export default useAuth(TaskManagement);
+export default TaskManagement;

@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { Project } from '@/types';
 import ProjectModal from '@/components/project-modal';
 import ProjectList from '@/components/project-list';
-import useAuth from '@/components/use-auth';
+import UseAuth from '@/components/use-auth';
 
 const Projects = () => {
   const [projects, setProjects] = useState([] as Project[]);
@@ -81,6 +81,7 @@ const Projects = () => {
   }, [searchTerm, projects]);
 
   return (
+    <UseAuth>
       <div className="container min-h-screen bg-gray-100 mx-auto px-6">
         <div className="flex justify-between items-center py-8 pt-24">
           <h1 className="text-4xl font-bold text-blue-600">MY Projects</h1>
@@ -112,7 +113,8 @@ const Projects = () => {
           saveProject={saveProject}
         />
       </div>
+    </UseAuth>
   );
 };
 
-export default useAuth(Projects);
+export default Projects;
