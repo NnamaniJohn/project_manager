@@ -11,6 +11,9 @@ const Projects = () => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [projectToEdit, setProjectToEdit] = useState<Project | null>(null);
   const [isLoading, setLoading] = useState(true)
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const [filteredProjects, setFilteredProjects] = useState<Project[]>([]);
 
   const openProjectModal = (project: React.SetStateAction<Project | null>) => {
     setProjectToEdit(project);
@@ -50,7 +53,6 @@ const Projects = () => {
     setProjects(projects.filter((project) => project.id !== projectId));
   }
 
-  console.log(process.env);
   useEffect(() => {
     fetch(`${process.env.NEXT_PUBLIC_API_URL}/projects`)
       .then((res) => res.json())
@@ -60,20 +62,35 @@ const Projects = () => {
       })
   }, [])
 
+  useEffect(() => {
+    setFilteredProjects(
+      projects.filter((project) =>
+        project.title.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    );
+  }, [searchTerm, projects]);
+
   return (
       <div className="container min-h-screen bg-gray-100 mx-auto px-6">
         <div className="flex justify-between items-center py-8 pt-24">
           <h1 className="text-4xl font-bold text-blue-600">MY Projects</h1>
-          <button
-            onClick={addNewProject}
-            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">New Project
-          </button>
+          <div>
+            <input
+              type="text"
+              placeholder="Search projects"
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="border border-gray-300 rounded-md px-4 py-2 mr-2 text-gray-600"
+            />
+            <button
+              onClick={addNewProject}
+              className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">New Project
+            </button>
+          </div>
         </div>
 
         {isLoading && <p className="text-black">Loading...</p>}
-        {(!isLoading && !projects.length) && <p className="text-black">No projects</p>}
         {(!isLoading && projects.length) && <ProjectList
-          projects={projects}
+          projects={filteredProjects}
           deleteProject={deleteProject}
           openProjectModal={openProjectModal}
         />}

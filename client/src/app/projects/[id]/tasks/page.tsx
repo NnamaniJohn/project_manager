@@ -19,6 +19,10 @@ const TaskManagement = ({
   const [taskToEdit, setTaskToEdit] = useState<Task | null>(null);
   const [isLoading, setLoading] = useState(true);;
   const [project, setProject] = useState({ title: '', description: '' });
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const [filteredTasks, setFilteredTasks] = useState<Task[]>([]);
+
   const openEditModal = (task: React.SetStateAction<Task | null>) => {
     setTaskToEdit(task);
     setIsEditMode(true);
@@ -92,6 +96,14 @@ const TaskManagement = ({
       })
   }, [id])
 
+  useEffect(() => {
+    setFilteredTasks(
+      tasks.filter((task) =>
+        task.title.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    );
+  }, [searchTerm, tasks]);
+
   return (
     <div className="min-h-screen bg-gray-100">
 
@@ -102,19 +114,27 @@ const TaskManagement = ({
               My Projects
             </Link>
             {" - "} {project.title}</h1>
-          <button
-            onClick={addNewTask}
-            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition"
-          >
-            Add New Task
-          </button>
+
+          <div>
+            <input
+              type="text"
+              placeholder="Search tasks"
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="border border-gray-300 rounded-md px-4 py-2 mr-2 text-gray-600"
+            />
+            <button
+              onClick={addNewTask}
+              className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition"
+            >
+              Add New Task
+            </button>
+          </div>
         </div>
         <h4 className="text-xl font-bold text-blue-600 mb-3">MY Tasks</h4>
 
         {isLoading && <p className="text-black">Loading...</p>}
-        {(!isLoading && !tasks.length) && <p className="text-black">No Tasks</p>}
         {(!isLoading && tasks.length) && <TaskList
-          tasks={tasks}
+          tasks={filteredTasks}
           openEditModal={openEditModal}
           deleteTask={deleteTask}
           updateStatus={updateStatus}
