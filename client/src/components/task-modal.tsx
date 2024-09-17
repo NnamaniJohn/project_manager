@@ -51,7 +51,7 @@ const TaskModal = ({ projectId, isOpen, closeModal, isEditMode, taskToEdit, save
 
       if (!response.ok) {
         if (data.errors) {
-          setValidationErrors(data.errors.map((err: any) => err.msg));
+          setValidationErrors(data.errors.map((err: { msg: string; }) => err.msg));
         } else {
           setError('An error occurred while saving the task. Please try again.');
         }

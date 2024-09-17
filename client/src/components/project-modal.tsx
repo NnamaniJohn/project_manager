@@ -46,7 +46,7 @@ const ProjectModal = ({ isOpen, closeModal, isEditMode, projectToEdit, saveProje
 
       if (!data.success) {
         if (data.errors) {
-          setValidationErrors(data.errors.map((err: any) => err.msg));
+          setValidationErrors(data.errors.map((err: { msg: string; }) => err.msg));
         } else {
           setError('An error occurred while saving the project. Please try again.');
         }

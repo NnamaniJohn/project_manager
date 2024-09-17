@@ -58,7 +58,8 @@ const TaskManagement = ({
   };
 
   const updateStatus = async (taskId: number, newStatus: TaskStatus) => {
-    await updateRequest({ ...tasks.find((task) => task.id === taskId), status: newStatus });
+    const updateTask = tasks.find((task) => task.id === taskId);
+    await updateRequest({ ...updateTask, title: updateTask?.title as string, status: newStatus });
     setTasks(
       tasks.map((task) =>
         task.id === taskId ? { ...task, status: newStatus } : task
@@ -66,7 +67,7 @@ const TaskManagement = ({
     );
   };
 
-  const updateRequest = async (taskData) => {
+  const updateRequest = async (taskData: Task) => {
     return fetch(`${process.env.NEXT_PUBLIC_API_URL}/tasks/${taskData?._id}`, {
       method: 'PUT',
       headers: {
@@ -80,7 +81,7 @@ const TaskManagement = ({
     fetch(`${process.env.NEXT_PUBLIC_API_URL}/projects/${id}/tasks`)
       .then((res) => res.json())
       .then((data) => {
-        setTasks(data.map((task) => ({ ...task, id: task._id })))
+        setTasks(data.map((task: Task) => ({ ...task, id: task._id })))
         setLoading(false)
       })
 
@@ -89,7 +90,7 @@ const TaskManagement = ({
       .then((data) => {
         setProject(data)
       })
-  }, [])
+  }, [id])
 
   return (
     <div className="min-h-screen bg-gray-100">

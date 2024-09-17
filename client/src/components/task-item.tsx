@@ -34,7 +34,7 @@ const TaskItem = ({ task, openEditModal, deleteTask, updateStatus }: Props) => {
         {task.status !== TaskStatus.Completed && (
           <select
             value={task.status}
-            onChange={(e) => updateStatus(task.id, e.target.value as TaskStatus)}
+            onChange={(e) => updateStatus(task.id as number, e.target.value as TaskStatus)}
             className="bg-gray-100 text-gray-700 p-2 rounded-md focus:ring-2 focus:ring-blue-600"
           >
             <option value={TaskStatus.Pending}>Pending</option>
@@ -49,7 +49,7 @@ const TaskItem = ({ task, openEditModal, deleteTask, updateStatus }: Props) => {
           Edit
         </button>
         <button
-          onClick={() => deleteTask(task.id)}
+          onClick={() => deleteTask(task.id as number)}
           className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition"
         >
           Delete
